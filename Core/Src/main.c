@@ -34,7 +34,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define WIDTH 122
+#define HEIGHT 250
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
