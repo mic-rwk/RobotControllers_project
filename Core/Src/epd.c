@@ -124,7 +124,7 @@ void EPD_Init(uint16_t width, uint16_t height) {
 	EPD_SendData(0x05);
 
 	EPD_SendCommand(DISPLAY_UPDATE_CONTROL_1);
-	EPD_SendData(0x00);
+	EPD_SendData(0x00);	//0x00 / 0x01
 	EPD_SendData(0x80);
 
 	EPD_ReadBusy();

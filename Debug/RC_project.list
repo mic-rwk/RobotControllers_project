@@ -779,7 +779,7 @@ void EPD_Init(uint16_t width, uint16_t height) {
 	EPD_SendCommand(DISPLAY_UPDATE_CONTROL_1);
  8000756:	2021      	movs	r0, #33	@ 0x21
  8000758:	f7ff ff33 	bl	80005c2 <EPD_SendCommand>
-	EPD_SendData(0x00);
+	EPD_SendData(0x00);	//0x00 / 0x01
  800075c:	2000      	movs	r0, #0
  800075e:	f7ff ff43 	bl	80005e8 <EPD_SendData>
 	EPD_SendData(0x80);
