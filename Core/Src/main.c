@@ -21,6 +21,7 @@
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
+#include "epd.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -44,7 +45,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -92,7 +92,14 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
+  EPD_Init(WIDTH, HEIGHT);
+  EPD_Clear(WIDTH, HEIGHT);
+  HAL_Delay(1000);
 
+
+  EPD_Sleep();
+
+  HAL_GPIO_WritePin(EPD_RST_GPIO_Port, EPD_RST_Pin, GPIO_PIN_RESET);
   /* USER CODE END 2 */
 
   /* Infinite loop */

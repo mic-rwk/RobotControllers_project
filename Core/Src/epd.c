@@ -1,7 +1,6 @@
-#ifndef EPD_C_
-#define EPD_C_
 
 #include "main.h"
+#include "spi.h"
 #include "epd.h"
 
 static void RESET_HIGH() {
@@ -37,15 +36,15 @@ static void Delay_ms(uint16_t ms) {
 }
 
 static void SPI_WriteByte(uint8_t value) {
-	HAL_SPI_Transmit(&hspi1, &value, 1, 1000);
+	HAL_SPI_Transmit(&hspi2, &value, 1, 1000);
 }
 
 static void EPD_Reset(void) {
-	RESET_HIG();
+	RESET_HIGH();
 	Delay_ms(20);
 	RESET_LOW();
 	Delay_ms(2);
-	RESET_HIG();
+	RESET_HIGH();
 	Delay_ms(20);
 }
 
@@ -79,9 +78,9 @@ static void EPD_SetWindows(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint
 
 	EPD_SendCommand(SET_RAM_Y_ADDRESS_START_END_POSITION);
 	EPD_SendData(yStart & 0xFF);
-	EPD_SendData((yStart >> 8) & 0xFF);
+	//EPD_SendData((yStart >> 8) & 0xFF);
 	EPD_SendData(yEnd & 0xFF);
-	EPD_SendData((yEnd >> 8) & 0xFF);
+	//EPD_SendData((yEnd >> 8) & 0xFF);
 }
 
 static void EPD_SetCursor(uint8_t xStart, uint16_t yStart) {
@@ -90,12 +89,12 @@ static void EPD_SetCursor(uint8_t xStart, uint16_t yStart) {
 
 	EPD_SendCommand(SET_RAM_Y_ADDRESS_COUNTER);
 	EPD_SendData(yStart & 0xFF);
-	EPD_SendData((yStart >> 8) & 0xFF);
+	//EPD_SendData((yStart >> 8) & 0xFF);
 }
 
 static void EPD_TurnOnDisplay(void) {
-	EPD_SendCommand(SET_TEMPERATURE_SENSOR_CONTROL);
-	EPD_SendData(SET_INTERNAL_TEMPERATURE_SENSOR);
+	//EPD_SendCommand(SET_TEMPERATURE_SENSOR_CONTROL);
+	//EPD_SendData(SET_INTERNAL_TEMPERATURE_SENSOR);
 	EPD_SendCommand(DISPLAY_UPDATE_CONTROL_2);
 	EPD_SendData(UPDATE_SEQUENCE_OPTION);
 	EPD_SendCommand(MASTER_ACTIVATION);
@@ -111,7 +110,7 @@ void EPD_Init(uint16_t width, uint16_t height) {
 
 	EPD_SendCommand(DRIVER_OUTPUT_CONTROL);
 	EPD_SendData(height - 1);
-	EPD_SendData(((height - 1) >> 8) & 0x01);
+	//EPD_SendData(((height - 1) >> 8) & 0x01);
 	EPD_SendData(0x00);
 
 
@@ -164,5 +163,3 @@ void EPD_Sleep() {
 	EPD_SendData(0x01);	//enter deep sleep mode
 	Delay_ms(100);
 }
-
-#endif
