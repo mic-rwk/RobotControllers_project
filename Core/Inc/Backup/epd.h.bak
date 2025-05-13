@@ -1,5 +1,5 @@
-#ifndef INC_EPD_H_
-#define INC_EPD_H_
+#ifndef EPD_H_
+#define EPD_H_
 
 #include "stdint.h"
 
@@ -24,30 +24,30 @@
 #define SET_RAM_X_ADDRESS_COUNTER                   0x4E
 #define SET_RAM_Y_ADDRESS_COUNTER                   0x4F
 #define SET_INTERNAL_TEMPERATURE_SENSOR				0x80
-#define UPDATE_SEQUENCE_OPTION						0xF7
+#define UPDATE_SEQUENCE_OPTION						0xC7	//?
 #define TERMINATE_FRAME_READ_WRITE                  0xFF
 
-void RESET_HIGH();
-void RESET_LOW();
-void CS_HIG();
-void CS_LOW();
-void DC_HIG();
-uint8_t BUSY_READ();
-void Delay_ms(uint16_t ms);
-void SPI_WriteByte(uint8_t value);
+static void RESET_HIGH();
+static void RESET_LOW();
+static void CS_HIG();
+static void CS_LOW();
+static void DC_HIG();
+static uint8_t BUSY_READ();
+static void Delay_ms(uint16_t ms);
+static void SPI_WriteByte(uint8_t value);
 
-void EPD_Reset(void);
-void EPD_SendCommand(uint8_t command);
-void EPD_SendData(uint8_t data);
-void EPD_ReadBusy(void);
+static void EPD_Reset(void);
+static void EPD_SendCommand(uint8_t command);
+static void EPD_SendData(uint8_t data);
+static void EPD_ReadBusy(void);
 
 void EPD_Init(uint16_t width, uint16_t height);
 void EPD_Clear(uint16_t width, uint16_t height);
 void EPD_Display(const uint8_t *image, uint16_t width, uint16_t height);
 void EPD_Sleep();
 
-void EPD_SetWindows(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd);
-void EPD_SetCursor(uint8_t xStart, uint16_t yStart);
-void EPD_TurnOnDisplay(void);
+static void EPD_SetWindows(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd);
+static void EPD_SetCursor(uint8_t xStart, uint16_t yStart);
+static void EPD_TurnOnDisplay(void);
 
 #endif

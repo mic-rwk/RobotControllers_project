@@ -24,7 +24,7 @@
 #define SET_RAM_X_ADDRESS_COUNTER                   0x4E
 #define SET_RAM_Y_ADDRESS_COUNTER                   0x4F
 #define SET_INTERNAL_TEMPERATURE_SENSOR				0x80
-#define UPDATE_SEQUENCE_OPTION						0xD7	//?
+#define UPDATE_SEQUENCE_OPTION						0xC7	//?
 #define TERMINATE_FRAME_READ_WRITE                  0xFF
 
 static void RESET_HIGH();

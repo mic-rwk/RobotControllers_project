@@ -1,0 +1,11 @@
+../Core/Src/paint.c:15:6:Paint_NewImage	24	static
+../Core/Src/paint.c:44:6:Paint_SelectImage	16	static
+../Core/Src/paint.c:53:6:Paint_SetRotate	16	static
+../Core/Src/paint.c:67:6:Paint_SetMirroring	16	static
+../Core/Src/paint.c:77:6:Paint_SetScale	16	static
+../Core/Src/paint.c:99:6:Paint_Clear	40	static
+../Core/Src/paint.c:143:6:Paint_ClearWindows	32	static
+../Core/Src/paint.c:160:6:Paint_DrawBitMap	24	static
+../Core/Src/paint.c:171:6:Paint_DrawBitMapXY	40	static
+../Core/Src/paint.c:186:6:DrawBitMap_DataInversion	16	static
+../Core/Src/paint.c:190:6:Paint_DrawBitMap_Block	24	static
