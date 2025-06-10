@@ -24,7 +24,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "demo.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,6 +58,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void demo_V11();
+extern void demo_V33( uint16_t temp,uint16_t co2);
 /* USER CODE END 0 */
 
 /**
@@ -94,7 +94,10 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-  demo_V11();
+  uint16_t temp = 100;
+  uint16_t co2 = 200;
+
+  demo_V33(temp,co2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
