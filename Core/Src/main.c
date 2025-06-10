@@ -21,12 +21,9 @@
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
-#include "paint.h"
-#include <stdio.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,8 +33,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define WIDTH 122
-#define HEIGHT 250
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,7 +57,8 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void demo_V11();
+extern void demo_V33( uint16_t temp,uint16_t co2);
 /* USER CODE END 0 */
 
 /**
@@ -95,36 +91,13 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-  MX_SPI2_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-    extern unsigned char pwr_logo[1000];
-  	uint8_t *BlackImage;
-  	uint16_t Imagesize = ((WIDTH % 8 == 0) ? (WIDTH / 8) : (WIDTH / 8 + 1)) * HEIGHT;
+  uint16_t temp = 100;
+  uint16_t co2 = 200;
 
-  	EPD_Init(WIDTH, HEIGHT);
-  	EPD_Clear(WIDTH, HEIGHT);
-  	HAL_Delay(1000);
-
-  	if ((BlackImage = (uint8_t*) malloc(Imagesize)) == NULL) {
-  		Error_Handler();
-  	}
-
-  	Paint_NewImage(BlackImage, WIDTH, HEIGHT, 90, WHITE);
-
-  	Paint_SelectImage(BlackImage);
-  	Paint_Clear(WHITE);
-  	Paint_DrawBitMapXY(pwr_logo, (WIDTH * 3 / 4) - 46 / 2, (HEIGHT - 248) / 2, 46, 248);
-
-  	EPD_Display(BlackImage, WIDTH, HEIGHT);
-  	HAL_Delay(2000);
-
-  	EPD_Sleep();
-  	free(BlackImage);
-  	BlackImage = NULL;
-  	//close 5V
-
-  	HAL_GPIO_WritePin(EPD_RST_GPIO_Port, EPD_RST_Pin, GPIO_PIN_RESET);
+  demo_V33(temp,co2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
