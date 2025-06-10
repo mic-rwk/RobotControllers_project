@@ -18,5 +18,8 @@
 void DHT11_Start(void);
 uint8_t DHT11_CheckResponse(void);
 uint8_t DHT11_ReadByte(void);
+float DHT_Read_Temp(void);
+float DHT_Read_Humidity(void);
+
 
 #endif // DHT11_H

@@ -20,13 +20,14 @@
 #include "main.h"
 #include "i2c.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
-
+#include <stdio.h>
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
@@ -38,10 +39,10 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-int _write(int file, char* ptr, int len){
-	HAL_UART_Transmit(&huart2, ptr, len, 50);
-	return len;
-}
+//int _write(int file, char* ptr, int len){
+//	HAL_UART_Transmit(&huart2, ptr, len, 50);
+//	return len;
+//}
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -59,7 +60,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void demo_V11();
-extern void demo_V33( uint16_t temp,uint16_t co2);
+extern void demo_V33();
 /* USER CODE END 0 */
 
 /**
@@ -94,12 +95,13 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI1_Init();
   MX_I2C3_Init();
+  MX_TIM6_Init();
+
+  HAL_TIM_Base_Start(&htim6);
   /* USER CODE BEGIN 2 */
+  SGP40_Init(&hi2c3);
 
-  uint16_t temp = 100;
-  uint16_t co2 = 200;
 
-  demo_V33(temp,co2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -107,7 +109,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  demo_V33();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

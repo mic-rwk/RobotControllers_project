@@ -1,0 +1,6 @@
+../Core/Src/dht11.c:16:6:delay_us	16	static
+../Core/Src/dht11.c:22:6:DHT11_Start	32	static
+../Core/Src/dht11.c:42:9:DHT11_CheckResponse	16	static
+../Core/Src/dht11.c:55:9:DHT11_ReadByte	16	static
+../Core/Src/dht11.c:69:7:DHT_Read_Temp	24	static
+../Core/Src/dht11.c:91:7:DHT_Read_Humidity	24	static

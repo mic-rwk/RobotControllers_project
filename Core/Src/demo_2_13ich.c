@@ -6,7 +6,8 @@
 #include <stdint.h>
 #include "dht11.h"
 #include "sgp40.h"
-
+#include "usart.h"
+#include <stdio.h>
 
 
 #define WIDTH 120
@@ -70,21 +71,31 @@ void demo_V22(){
 }
 
 
-void demo_V33(uint16_t temp, uint16_t co2){
+int _write(int file, char* ptr, int len){
+	HAL_UART_Transmit(&huart2, ptr, len, 50);
+	return len;
+}
+
+void demo_V33(){
     float temperature = 0.0f, humidity = 0.0f;
     char temp_value_str[32] = "Brak danych";
-    if (DHT11_Read(&temperature, &humidity) == HAL_OK)
+
+
+    temperature = DHT_Read_Temp();
+    humidity = DHT_Read_Humidity();
+
+    if (temperature > -100.0f && humidity > -1.0f)
     {
         snprintf(temp_value_str, sizeof(temp_value_str), "%.1f C", temperature);
         char buf[64];
-        snprintf(buf, sizeof(buf), "Temp: %.1f C, RH: %.1f %%\r\n", temperature, humidity);
-        //HAL_UART_Transmit(&husart2, (uint8_t *)buf, strlen(buf), HAL_MAX_DELAY);
+        snprintf(buf, sizeof(buf), "%.1f C, RH: %.1f %%\r\n", temperature, humidity);
+        HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen(buf), HAL_MAX_DELAY);
     }
     else
     {
         strcpy(temp_value_str, "Błąd");
         char err[] = "DHT11 read error\r\n";
-        //HAL_UART_Transmit(&husart2, (uint8_t*)err, strlen(err), HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart2, (uint8_t*)err, strlen(err), HAL_MAX_DELAY);
     }
 
     uint16_t voc_raw = 0;
@@ -94,30 +105,20 @@ void demo_V33(uint16_t temp, uint16_t co2){
         snprintf(co2_value_str, sizeof(co2_value_str), "%u", voc_raw);
         char buf[64];
         snprintf(buf, sizeof(buf), "SGP40 VOC: %u raw\r\n", voc_raw);
-        //HAL_UART_Transmit(&husart2, (uint8_t*)buf, strlen(buf), HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart2, (uint8_t*)buf, strlen(buf), HAL_MAX_DELAY);
     }
     else
     {
         strcpy(co2_value_str, "Błąd");
         char err[] = "SGP40 read error\r\n";
-        //HAL_UART_Transmit(&husart2, (uint8_t*)err, strlen(err), HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart2, (uint8_t*)err, strlen(err), HAL_MAX_DELAY);
     }
     HAL_Delay(1000);
-
-    const char temp_title_text[] = "Temperatura: ";
-    const char co2_title_text[] = "CO2: ";
-
-    
 
     uint16_t x_temp_title_text = 0;
     uint16_t y_temp_title_text = 5;
     uint16_t x_co2_title_text = 0;
     uint16_t y_co2_title_text = 50;
-
-    uint16_t x_temp_value = 100;
-    uint16_t y_temp_value = 5;
-    uint16_t x_co2_value = 100;
-    uint16_t y_co2_value = 50;
 
     static uint8_t BlackImage[120/8 * 250];
     static uint8_t RedImage[120/8 * 250];

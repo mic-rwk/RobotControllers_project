@@ -4,6 +4,11 @@
 #include "main.h"
 #include <string.h>
 #include <stdint.h>
+#include "dht11.h"
+#include "sgp40.h"
+#include "usart.h"
+
+
 
 #define WIDTH 120
 #define HEIGHT 250
@@ -65,7 +70,45 @@ void demo_V22(){
     EPD_Sleep();
 }
 
-void demo_V33(uint16_t temp, uint16_t co2){
+
+void demo_V33(){
+    float temperature = 0.0f, humidity = 0.0f;
+    char temp_value_str[32] = "Brak danych";
+
+    temperature = DHT_Read_Temp();
+    humidity = DHT_Read_Humidity();
+
+    if (temperature > -100.0f && humidity > -1.0f)
+    {
+        snprintf(temp_value_str, sizeof(temp_value_str), "%.1f C", temperature);
+        char buf[64];
+        snprintf(buf, sizeof(buf), "Temp: %.1f C, RH: %.1f %%\r\n", temperature, humidity);
+        HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen(buf), HAL_MAX_DELAY);
+    }
+    else
+    {
+        strcpy(temp_value_str, "Błąd");
+        char err[] = "DHT11 read error\r\n";
+        HAL_UART_Transmit(&huart2, (uint8_t*)err, strlen(err), HAL_MAX_DELAY);
+    }
+
+    uint16_t voc_raw = 0;
+    char co2_value_str[32] = "Brak danych";
+    if (SGP40_MeasureRaw(&voc_raw) == HAL_OK)
+    {
+        snprintf(co2_value_str, sizeof(co2_value_str), "%u", voc_raw);
+        char buf[64];
+        snprintf(buf, sizeof(buf), "SGP40 VOC: %u raw\r\n", voc_raw);
+        HAL_UART_Transmit(&huart2, (uint8_t*)buf, strlen(buf), HAL_MAX_DELAY);
+    }
+    else
+    {
+        strcpy(co2_value_str, "Błąd");
+        char err[] = "SGP40 read error\r\n";
+        HAL_UART_Transmit(&huart2, (uint8_t*)err, strlen(err), HAL_MAX_DELAY);
+    }
+    HAL_Delay(1000);
+
     const char temp_title_text[] = "Temperatura: ";
     const char co2_title_text[] = "CO2: ";
 
@@ -93,8 +136,13 @@ void demo_V33(uint16_t temp, uint16_t co2){
     // 4. Teraz wczytaj tekst do BlackImage i RedImage za pomocą Paint:
     Paint_NewImage(BlackImage, 120, 250, 0, WHITE);
     Paint_SelectImage(BlackImage);
-    Paint_DrawString_EN(x_temp_title_text, y_temp_title_text, temp_title_text, &Font12, BLACK, WHITE);
-    Paint_DrawString_EN(x_co2_title_text, y_co2_title_text, co2_title_text, &Font12, BLACK, WHITE);
+    char temp_full_str[64];
+    char co2_full_str[64];
+    snprintf(temp_full_str, sizeof(temp_full_str), "Temperatura: %s", temp_value_str);
+    snprintf(co2_full_str, sizeof(co2_full_str), "CO2: %s", co2_value_str);
+
+    Paint_DrawString_EN(x_temp_title_text, y_temp_title_text, temp_full_str, &Font12, BLACK, WHITE);
+    Paint_DrawString_EN(x_co2_title_text, y_co2_title_text, co2_full_str, &Font12, BLACK, WHITE);
 
     // 5. Wyświetl
     EPD_Display(BlackImage, RedImage, 120, 250);

@@ -1,0 +1,2 @@
+../Core/Src/sgp40.c:8:19:SGP40_Init	24	static
+../Core/Src/sgp40.c:14:19:SGP40_MeasureRaw	40	static
