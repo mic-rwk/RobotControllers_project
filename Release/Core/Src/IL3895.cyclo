@@ -1,0 +1,8 @@
+../Core/Src/IL3895.c:66:13:EPD_ReadBusy	2
+../Core/Src/IL3895.c:52:13:EPD_SendCommand	1
+../Core/Src/IL3895.c:59:13:EPD_SendData	1
+../Core/Src/IL3895.c:96:13:EPD_TurnOnDisplay	1
+../Core/Src/IL3895.c:105:6:EPD_Init	1
+../Core/Src/IL3895.c:171:6:EPD_Clear	6
+../Core/Src/IL3895.c:189:6:EPD_Display	8
+../Core/Src/IL3895.c:211:6:EPD_Sleep	1

@@ -10,6 +10,7 @@
 "./Core/Src/barcodeImage.o"
 "./Core/Src/demo_2_13ich.o"
 "./Core/Src/dht11.o"
+"./Core/Src/dma.o"
 "./Core/Src/gpio.o"
 "./Core/Src/i2c.o"
 "./Core/Src/logo250x48.o"

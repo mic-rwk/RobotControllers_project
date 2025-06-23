@@ -11,10 +11,12 @@
 #define DHT11_RESPONSE_DELAY2_US   100
 #define DHT11_RESPONSE_DELAY3_US   40   
 
+
+extern TIM_HandleTypeDef htim6;
 void delay_us(uint16_t us)
 {
-    __HAL_TIM_SET_COUNTER(&htim1, 0);
-    while (__HAL_TIM_GET_COUNTER(&htim1) < us);
+    __HAL_TIM_SET_COUNTER(&htim6, 0);
+    while (__HAL_TIM_GET_COUNTER(&htim6) < us);
 }
 
 void DHT11_Start(void)

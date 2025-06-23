@@ -1,0 +1,4 @@
+../Core/Src/demo_2_13ich.c:21:6:demo_V11	16	static
+../Core/Src/demo_2_13ich.c:53:6:demo_V22	16	static
+../Core/Src/demo_2_13ich.c:79:6:demo_V33	176	static
+../Core/Src/demo_2_13ich.c:152:6:demo4	24	static,ignoring_inline_asm

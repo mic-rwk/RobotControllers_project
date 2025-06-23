@@ -1,0 +1,6 @@
+../Core/Src/dht11.c:16:6:delay_us	2
+../Core/Src/dht11.c:22:6:DHT11_Start	1
+../Core/Src/dht11.c:42:9:DHT11_CheckResponse	2
+../Core/Src/dht11.c:55:9:DHT11_ReadByte	5
+../Core/Src/dht11.c:69:7:DHT_Read_Temp	4
+../Core/Src/dht11.c:91:7:DHT_Read_Humidity	3

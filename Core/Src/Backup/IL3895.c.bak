@@ -42,11 +42,11 @@ static void SPI_WriteByte(uint8_t value) {
 
 static void EPD_Reset(void) {
 	RESET_HIG();
-	Delay_ms(20);
+	HAL_Delay(20);
 	RESET_LOW();
-	Delay_ms(2);
+	HAL_Delay(2);
 	RESET_HIG();
-	Delay_ms(20);
+	HAL_Delay(20);
 }
 
 static void EPD_SendCommand(uint8_t Reg) {
@@ -69,7 +69,7 @@ static void EPD_ReadBusy(void) {
 			break;
 		Delay_ms(10);
 	}
-	Delay_ms(10);
+	HAL_Delay(10);
 }
 
 static void EPD_SetWindows(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend) {
@@ -211,7 +211,7 @@ void EPD_Display(const uint8_t *blackImage, const uint8_t *redImage, uint16_t Wi
 void EPD_Sleep() {
 	EPD_SendCommand(0x10); //enter deep sleep
 	EPD_SendData(0x01);
-	Delay_ms(100);
+	HAL_Delay(100);
 }
 
 #endif /* SRC_SSD1680_C_ */

@@ -21,13 +21,14 @@
 #include "i2c.h"
 #include "spi.h"
 #include "tim.h"
+#include "dma.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
-#include <stdio.h>
+
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
@@ -39,10 +40,10 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-//int _write(int file, char* ptr, int len){
-//	HAL_UART_Transmit(&huart2, ptr, len, 50);
-//	return len;
-//}
+int _write(int file, char* ptr, int len){
+	HAL_UART_Transmit(&huart4, ptr, len, 50);
+	return len;
+}
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -59,8 +60,17 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void demo_V11();
-extern void demo_V33();
+#define RX_BUFFER_SIZE 64
+
+uint8_t rxData;                    // dla menu (1 bajt)
+char txt[RX_BUFFER_SIZE];          // dla demo4
+uint16_t txtIndex = 0;
+uint8_t mode = 0;                  // 0 = menu, 1 = odbiór tekstu DMA
+uint8_t waiting_for_first_char = 0;
+
+volatile uint8_t flag_demo_V22 = 0;
+volatile uint8_t flag_demo_V11 = 0;
+volatile uint8_t flag_demo4 = 0;
 /* USER CODE END 0 */
 
 /**
@@ -92,15 +102,18 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USART2_UART_Init();
   MX_SPI1_Init();
   MX_I2C3_Init();
+  MX_UART4_Init();
   MX_TIM6_Init();
+  MX_USART2_UART_Init();
 
-  HAL_TIM_Base_Start(&htim6);
+  HAL_UART_Receive_IT(&huart4, &rxData, 1);
   /* USER CODE BEGIN 2 */
-  SGP40_Init(&hi2c3);
-
+  //SGP40_Init(&hi2c3);
+  printf("Menu.\r\n");
+  HAL_Delay(1000);
+  printf("Wybierz opcje: 0-obraz, 1-ksztalty, 2-tekst do demo\r\n");
 
   /* USER CODE END 2 */
 
@@ -108,9 +121,25 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
-	  demo_V33();
-    /* USER CODE BEGIN 3 */
+      if(flag_demo_V22)
+      {
+          demo_V22();
+          flag_demo_V22 = 0;
+      }
+
+      if(flag_demo_V11)
+      {
+          demo_V11();
+          flag_demo_V11 = 0;
+      }
+
+      if(flag_demo4)
+      {
+    	  printf("Odebrano tekst: %s\r\n", txt);
+          demo4(txt);
+          flag_demo4 = 0;
+      }
+
   }
   /* USER CODE END 3 */
 }
@@ -166,6 +195,62 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if(huart == &huart4)
+    {
+    	printf("UART4: Odebrano: %c\r\n", rxData);
+        if(mode == 0)
+        {
+            switch(rxData)
+            {
+                case '0':
+                    flag_demo_V22 = 1;
+                    break;
+                case '1':
+                    flag_demo_V11 = 1;
+                    break;
+                case '2':
+                    mode = 1;
+                    txtIndex = 0;
+                    waiting_for_first_char = 1; // pierwszy znak ignorujemy
+                    printf("Opcja 2 - wprowadź tekst:\r\n");
+                    break;
+                	printf("Tryb tekstu - wpisz tekst i zakończ (Enter)\r\n");
+					mode = 1;
+                default:
+                    printf("Nieznana opcja\r\n");
+                    break;
+            }
+        }
+        else if(mode == 1)
+        {
+            if(waiting_for_first_char)
+            {
+                waiting_for_first_char = 0; // pierwszy znak pomijamy
+            }
+            else
+            {
+                if(rxData == '\r' || rxData == '\n') // koniec tekstu
+                {
+                    txt[txtIndex] = '\0';
+                    flag_demo4 = 1;
+                    mode = 0;
+                }
+                else
+                {
+                    if(txtIndex < sizeof(txt) - 1)
+                        txt[txtIndex++] = rxData;
+                }
+            }
+        }
+
+        HAL_UART_Receive_IT(&huart4, &rxData, 1);
+    }
+}
+
+
 /* USER CODE END 4 */
 
 /**
@@ -176,6 +261,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
+	printf("Błąd inicjalizacji zegara/systemu!\r\n");
   __disable_irq();
   while (1)
   {
